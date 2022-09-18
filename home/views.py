@@ -25,9 +25,9 @@ def about(requests):
 
 def login(requests):
     if requests.method == 'POST':
-        username = requests.POST.get('username')
+        email = requests.POST.get('email')
         password = requests.POST.get('password')
-        cursor.execute("SELECT * FROM user WHERE username = %s AND password = %s", (username, password,))
+        cursor.execute("SELECT * FROM user WHERE email = %s AND password = %s", (email, password,))
         account = cursor.fetchone()
         if account:
             return render(requests, 'index.html', {'message': 'Login successful'})
