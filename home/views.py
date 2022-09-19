@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 import mysql.connector
+from django.contrib import messages
+from django.contrib.auth import login,logout,authenticate
 
 
 mydb = mysql.connector.connect(
@@ -23,15 +25,18 @@ def about(requests):
     return render(requests, 'about.html')
 
 
-def login(requests):
+def user_login(requests):
     if requests.method == 'POST':
         email = requests.POST.get('email')
         password = requests.POST.get('password')
         cursor.execute("SELECT * FROM user WHERE email = %s AND password = %s", (email, password,))
         account = cursor.fetchone()
         if account:
+            #login(requests, account)
+            messages.success(requests, 'Logged in successfully')
             return render(requests, 'index.html', {'message': 'Login successful'})
         else:
+            messages.error(requests, 'Invalid credentials')
             return render(requests, 'login.html', {'message': 'Invalid username or password'})
 
     return render(requests, 'login.html')
@@ -45,12 +50,14 @@ def signup(requests):
         password2 = requests.POST.get('password2')
 
         if password == password2: 
-            cursor.execute("INSERT INTO user (username, email, password) VALUES (%s, %s, %s)", (username, email, password,))           
+            cursor.execute("INSERT INTO user (username, email, password) VALUES (%s, %s, %s)", (username, email, password,))    
+            messages.success(requests, 'Account created for ' + username)    
             return render(requests, 'login.html', {'message': 'User created successfully'})
         else:
-            return render(requests, 'login.html', {'message': 'Password didn\'t match'})
+            messages.info(requests, 'Password not matching')
+            return render(requests, 'index.html', {'message': 'Password didn\'t match'})
     else:
-        return render(requests, 'login.html')               
+        return render(requests, 'about.html')               
 
 
 def portfolio(requests):

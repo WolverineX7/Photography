@@ -80,6 +80,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'host': 'localhost',
+        'user' : 'root',
+        'password' : 'shree7',
+        'database' : 'photography',
+        'autocommit' : True
     }
 }
 
